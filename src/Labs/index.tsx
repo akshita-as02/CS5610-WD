@@ -7,6 +7,7 @@ export default function Labs() {
   return (
     <div id="wd-labs">
       <h1>Labs</h1>
+      <h2>Student Name- AKSHITA SINGH</h2>
       <TOC />
       <Routes>
         <Route path="/" element={<Navigate to="Labs" />} />
