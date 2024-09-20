@@ -1,2 +1,2 @@
-# CS5610-WD
+# Kanbas-react-web-app
 Web Dev assigments
