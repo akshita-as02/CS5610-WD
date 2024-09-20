@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function AssignmentEditor() {
     return (
       <div id="wd-assignments-editor">
@@ -110,9 +111,17 @@ export default function AssignmentEditor() {
           </tbody>
         </table>
   
-        {/* Cancel and Save Buttons */}
-        <button style={{ marginRight: '10px' }}>Cancel</button>
-        <button>Save</button>
+{/* Cancel and Save Buttons */}
+        <tr>
+            <td colSpan={2}>
+                <Link to="/Kanbas/Courses/1234/Assignments">
+                    <button style={{ marginRight: '10px' }}>Cancel</button>
+                </Link>
+                <Link to="/Kanbas/Courses/1234/Assignments">
+                    <button>Save</button>
+                </Link>
+            </td>
+        </tr>
       </div>
     );
   }
