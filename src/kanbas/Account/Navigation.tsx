@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import "C:\\Users\\ASUS\\kanbas-react-web-app\\src\\kanbas\\styles.css";
 
 export default function AccountNavigation() {
     return (
