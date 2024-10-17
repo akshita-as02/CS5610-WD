@@ -1,109 +1,38 @@
-import { Link, useLocation } from "react-router-dom";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { IoCalendarOutline } from "react-icons/io5";
-import { LiaBookSolid } from "react-icons/lia";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { HiOutlineInboxArrowDown } from "react-icons/hi2";
-import { FaLaptopCode } from "react-icons/fa";
-
+import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
+import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
+import { Link, useLocation } from "react-router-dom";
 export default function KanbasNavigation() {
-  const location = useLocation();
-
-  const isActive = (path: string): boolean => location.pathname.startsWith(path);
-
+  const { pathname } = useLocation();
+  const links = [
+    { label: "Dashboard", path: "/Kanbas/Dashboard", icon: AiOutlineDashboard },
+    { label: "Courses",   path: "/Kanbas/Courses", icon: LiaBookSolid },
+    { label: "Calendar",  path: "/Kanbas/Calendar",  icon: IoCalendarOutline },
+    { label: "Inbox",     path: "/Kanbas/Inbox",     icon: FaInbox },
+    { label: "Labs",      path: "/Labs",             icon: LiaCogSolid },
+  ];
   return (
-    <div
-      id="wd-kanbas-navigation"
-      style={{ width: 80 }}
-      className="list-group rounded-0 position-fixed bottom-0 top-0 
-      d-none d-md-block bg-black z-2"
-    >
-      <a
-        id="wd-neu-link"
-        target="_blank"
-        href="https://www.northeastern.edu/"
-        className="list-group-item bg-black border-0 text-center 
-        d-flex align-items-center justify-content-center"
-      >
-        <img src="/images/NEU.png" width="55px" />
-      </a>
-
-      <Link
-        to="/Kanbas/Account"
-        id="wd-account-link"
-        className={`list-group-item text-center border-0 d-flex align-items-center justify-content-center flex-column ${isActive("/Kanbas/Account") ? "bg-white text-danger" : "bg-black text-white"
-          }`}
-        style={{ height: "75px" }}
-      >
-        <FaRegCircleUser
-          className={`fs-3 ${isActive("/Kanbas/Account") ? "text-danger" : "text-white"}`}
-        />
-        <span style={{ fontSize: "12px" }}>Account</span>
+    <div id="wd-kanbas-navigation" style={{width: 85}}
+         className="list-group rounded-0 position-fixed bottom-0 top-0 d-none d-md-block bg-black z-2">
+      <a id="wd-neu-link" target="_blank" href="https://www.northeastern.edu/"
+        className="list-group-item bg-black border-0 text-center d-flex justify-content-center align-items-center" >
+        <img src="/images/NEU.png" width="75px" /></a>
+      <Link to="/Kanbas/Account" className={`list-group-item text-center border-0 bg-black
+            ${pathname.includes("Account") ? "bg-white text-danger" : "bg-black text-white"}`}
+            style={{fontSize: '14px'}}>
+        <FaRegCircleUser className={`fs-2 ${pathname.includes("Account") ? "text-danger" : "text-white"}`} />
+        <br />
+        Account
       </Link>
-
-      <Link
-        to="/Kanbas/Dashboard"
-        id="wd-dashboard-link"
-        className={`list-group-item text-center border-0 
-    ${isActive('/Kanbas/Dashboard') ? 'bg-white text-danger' : 'bg-black text-white'} 
-    d-flex align-items-center justify-content-center flex-column`}
-        style={{ height: "75px" }}
-      >
-        <AiOutlineDashboard className={`fs-3 ${isActive('/Kanbas/Dashboard') ? 'text-danger' : 'text-white'}`} />
-        <span style={{ fontSize: "12px" }}>Dashboard</span>
-      </Link>
-
-      <Link
-        to="/Kanbas/Courses"
-        id="wd-course-link"
-        className={`list-group-item text-center border-0 d-flex align-items-center justify-content-center flex-column ${isActive("/Kanbas/Courses") ? "bg-white text-danger" : "bg-black text-white"
-          }`}
-        style={{ height: "75px" }}
-      >
-        <LiaBookSolid
-          className={`fs-3 ${isActive("/Kanbas/Courses") ? "text-danger" : "text-white"}`}
-        />
-        <span style={{ fontSize: "12px" }}>Courses</span>
-      </Link>
-
-      <Link
-        to="/Kanbas/Calendar"
-        id="wd-calendar-link"
-        className={`list-group-item text-center border-0 d-flex align-items-center justify-content-center flex-column ${isActive("/Kanbas/Calendar") ? "bg-white text-danger" : "bg-black text-white"
-          }`}
-        style={{ height: "75px" }}
-      >
-        <IoCalendarOutline
-          className={`fs-3 ${isActive("/Kanbas/Calendar") ? "text-danger" : "text-white"}`}
-        />
-        <span style={{ fontSize: "12px" }}>Calendar</span>
-      </Link>
-
-      <Link
-        to="/Kanbas/Inbox"
-        id="wd-inbox-link"
-        className={`list-group-item text-center border-0 d-flex align-items-center justify-content-center flex-column ${isActive("/Kanbas/Inbox") ? "bg-white text-danger" : "bg-black text-white"
-          }`}
-        style={{ height: "75px" }}
-      >
-        <HiOutlineInboxArrowDown
-          className={`fs-3 ${isActive("/Kanbas/Inbox") ? "text-danger" : "text-white"}`}
-        />
-        <span style={{ fontSize: "12px" }}>Inbox</span>
-      </Link>
-
-      <Link
-        to="/Labs"
-        id="wd-labs-link"
-        className={`list-group-item text-center border-0 d-flex align-items-center justify-content-center flex-column ${isActive("/Labs") ? "bg-white text-danger" : "bg-black text-white"
-          }`}
-        style={{ height: "75px" }}
-      >
-        <FaLaptopCode
-          className={`fs-3 ${isActive("/Labs") ? "text-danger" : "text-white"}`}
-        />
-        <span style={{ fontSize: "12px" }}>Labs</span>
-      </Link>
+      {links.map((link) => (
+        <Link key={link.path} to={link.path} className={`list-group-item bg-black text-center border-0
+              ${pathname.includes(link.label) ? "text-danger bg-white" : "text-white bg-black"}`}
+              style={{fontSize: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', 
+              alignItems: 'center', justifyContent: 'center'}} >
+          {link.icon({ className: "fs-2 text-danger", style: {alignItems: 'center'}})}
+          {link.label}
+        </Link>
+      ))}
     </div>
-  );
-}
+);}

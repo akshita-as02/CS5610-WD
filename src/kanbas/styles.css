@@ -15,6 +15,7 @@ body * {
 
 .wd-dashboard-course {
     max-width: 260px;
+
 }
 
 .img-container {
@@ -66,12 +67,22 @@ body * {
 #wd-course-status button {
     margin-left: 10px; 
 }
-
+/* 
 #wd-assignments {
     border-left: 3px solid green;
     padding-left: 15px;
+} */
+
+.assignments-container {
+    position: relative;
 }
 
+.assignment-list {
+    position: relative;
+    border-left: 4px solid green; /* The green line */
+    padding-left: 10px;
+    margin-top: 20px; /* Adjust this to align with "ASSIGNMENTS" */
+}
 .input-group {
     flex-grow: 1; 
 }
@@ -93,8 +104,3 @@ body * {
     font-size: 1.2em; 
     vertical-align: middle; 
 }
-
-.invisible-border {
-    border: none !important; 
-    outline: none;
-  }

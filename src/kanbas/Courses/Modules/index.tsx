@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useParams } from "react-router";
+import * as db from "../../Database";
 import { BsGripVertical } from "react-icons/bs"; // Import the icon
-import { FaCheckCircle, FaTimesCircle, FaRedoAlt } from "react-icons/fa"; // Import additional icons for actions
-import ModulesControls from "./ModulesControls"; 
 import ModuleControlButtons from "./ModuleControlButtons"; 
 import LessonControlButtons from "./LessonControlButtons"; 
+import ModulesControls from "./ModulesControls"; 
 
 export default function Modules() {
-    const [collapsed, setCollapsed] = useState(false);
+    const { cid } = useParams(); // Get course id from URL parameters
+    const modules = db.modules; // Access modules from the database
+    const [collapsed, setCollapsed] = useState(false); // State to manage collapse
     const [selectedAction, setSelectedAction] = useState("");
 
     const toggleCollapseAll = () => {
@@ -20,133 +23,34 @@ export default function Modules() {
         }
     };
 
+    // Filter the modules by the course ID (cid)
+    const filteredModules = modules.filter((module: any) => module.course === cid);
+
     return (
         <div>
             <ModulesControls /><br /><br /><br />
             <ul id="wd-modules" className="list-group rounded-0">
-                {/* Week 1 */}
-                <li className={`wd-module list-group-item p-0 mb-5 fs-5 border-gray ${collapsed ? "collapsed" : ""}`}>
-                    <div className="wd-title p-3 ps-2 bg-secondary"> 
-                        <BsGripVertical className="me-2 fs-3" />
-                        Week 1
-                        <ModuleControlButtons />
-                    </div>
-                    <ul className="wd-lessons list-group rounded-0">
-                        <li className="wd-lesson list-group-item p-3 ps-1">
+                {filteredModules.map((module: any) => (
+                    <li key={module._id} className={`wd-module list-group-item p-0 mb-5 fs-5 border-gray ${collapsed ? "collapsed" : ""}`}>
+                        <div className="wd-title p-3 ps-2 bg-secondary"> 
                             <BsGripVertical className="me-2 fs-3" />
-                            LEARNING OBJECTIVES
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Introduction to the course
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Learn what is Web Development
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Overview of Frontend and Backend
-                            <LessonControlButtons />
-                        </li>
-                    </ul>
-                </li>
+                            {module.name}
+                            <ModuleControlButtons />
+                        </div>
 
-                {/* Week 2 */}
-                <li className={`wd-module list-group-item p-0 mb-5 fs-5 border-gray ${collapsed ? "collapsed" : ""}`}>
-                    <div className="wd-title p-3 ps-2 bg-secondary">
-                        <BsGripVertical className="me-2 fs-3" />
-                        Week 2
-                        <ModuleControlButtons />
-                    </div>
-                    <ul className="wd-lessons list-group rounded-0">
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            LEARNING OBJECTIVES
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Introduction to HTML & CSS
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Building web pages with HTML
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Styling web pages with CSS
-                            <LessonControlButtons />
-                        </li>
-                    </ul>
-                </li>
-
-                {/* Week 3 */}
-                <li className={`wd-module list-group-item p-0 mb-5 fs-5 border-gray ${collapsed ? "collapsed" : ""}`}>
-                    <div className="wd-title p-3 ps-2 bg-secondary">
-                        <BsGripVertical className="me-2 fs-3" />
-                        Week 3
-                        <ModuleControlButtons />
-                    </div>
-                    <ul className="wd-lessons list-group rounded-0">
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            LEARNING OBJECTIVES
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Introduction to JavaScript
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Understanding variables, functions, and loops
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Manipulating the DOM with JavaScript
-                            <LessonControlButtons />
-                        </li>
-                    </ul>
-                </li>
-
-                {/* Week 4 */}
-                <li className={`wd-module list-group-item p-0 mb-5 fs-5 border-gray ${collapsed ? "collapsed" : ""}`}>
-                    <div className="wd-title p-3 ps-2 bg-secondary">
-                        <BsGripVertical className="me-2 fs-3" />
-                        Week 4
-                        <ModuleControlButtons />
-                    </div>
-                    <ul className="wd-lessons list-group rounded-0">
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            LEARNING OBJECTIVES
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Introduction to Responsive Design
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Using Media Queries for different screen sizes
-                            <LessonControlButtons />
-                        </li>
-                        <li className="wd-lesson list-group-item p-3 ps-1">
-                            <BsGripVertical className="me-2 fs-3" />
-                            Introduction to Flexbox and Grid
-                            <LessonControlButtons />
-                        </li>
-                    </ul>
-                </li>
+                        {module.lessons && (
+                            <ul className="wd-lessons list-group rounded-0">
+                                {module.lessons.map((lesson: any) => (
+                                    <li key={lesson._id} className="wd-lesson list-group-item p-3 ps-1">
+                                        <BsGripVertical className="me-2 fs-3" />
+                                        {lesson.name}
+                                        <LessonControlButtons />
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </li>
+                ))}
             </ul>
         </div>
     );

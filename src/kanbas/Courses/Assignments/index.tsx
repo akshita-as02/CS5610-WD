@@ -1,7 +1,14 @@
 import { FaSearch, FaPlus, FaCheckCircle } from "react-icons/fa";
 import { MdOutlineAssignment } from "react-icons/md";
+import { useParams, Link } from "react-router-dom";
+import assignmentsData from "../../Database/assignments.json"; // Adjust the import path as necessary
 
 export default function Assignments() {
+    const { cid } = useParams(); // Get the course ID from the URL
+
+    // Filter assignments based on the course ID
+    const assignments = assignmentsData.filter((assignment: any) => assignment.course === cid);
+
     return (
         <div id="wd-assignments" className="p-3">
             {/* Search and Buttons Section */}
@@ -46,76 +53,35 @@ export default function Assignments() {
                 </div>
             </h3>
 
-            <ul id="wd-assignment-list" className="list-unstyled">
-                {/* Assignment 1 */}
-                <li className="wd-assignment-list-item d-flex align-items-start">
-                    <div className="wd-icon">
-                        <MdOutlineAssignment style={{ fontSize: '1.5rem', color: 'green' }} />
-                    </div>
-                    <div className="flex-grow-1">
-                        <a
-                            className="wd-assignment-link"
-                            href="#/Kanbas/Courses/1234/Assignments/123"
-                            style={{ fontWeight: 'bold', color: 'black' }}
-                        >
-                            A1 - ENV + HTML
-                        </a>
-                        <div>
-                            Multiple Modules | <strong>Not available until</strong> May 6 at 12:00am | <br />
-                            <strong>Due</strong> May 13 at 11:59pm | 100 pts
-                        </div>
-                    </div>
-                    <div className="wd-status-icon">
-                        <FaCheckCircle style={{ color: 'green' }} /> {/* Green check icon */}
-                    </div>
-                </li>
-
-                {/* Assignment 2 */}
-                <li className="wd-assignment-list-item d-flex align-items-start">
-                    <div className="wd-icon">
-                        <MdOutlineAssignment style={{ fontSize: '1.5rem', color: 'green' }} />
-                    </div>
-                    <div className="flex-grow-1">
-                        <a
-                            className="wd-assignment-link"
-                            href="#/Kanbas/Courses/1234/Assignments/124"
-                            style={{ fontWeight: 'bold', color: 'black' }}
-                        >
-                            A2 - CSS + BOOTSTRAP
-                        </a>
-                        <div>
-                            Multiple Modules | <strong>Not available until</strong> May 13 at 12:00am | <br />
-                            <strong>Due</strong> May 20 at 11:59pm | 100 pts
-                        </div>
-                    </div>
-                    <div className="wd-status-icon">
-                        <FaCheckCircle style={{ color: 'green' }} /> {/* Green check icon */}
-                    </div>
-                </li>
-
-                {/* Assignment 3 */}
-                <li className="wd-assignment-list-item d-flex align-items-start">
-                    <div className="wd-icon">
-                        <MdOutlineAssignment style={{ fontSize: '1.5rem', color: 'green' }} />
-                    </div>
-                    <div className="flex-grow-1">
-                        <a
-                            className="wd-assignment-link"
-                            href="#/Kanbas/Courses/1234/Assignments/125"
-                            style={{ fontWeight: 'bold', color: 'black' }}
-                        >
-                            A3 - JAVASCRIPT + REACT
-                        </a>
-                        <div>
-                            Multiple Modules | <strong>Not available until</strong> May 20 at 12:00am | <br />
-                            <strong>Due</strong> May 27 at 11:59pm | 100 pts
-                        </div>
-                    </div>
-                    <div className="wd-status-icon">
-                        <FaCheckCircle style={{ color: 'green' }} /> {/* Green check icon */}
-                    </div>
-                </li>
+            <ul id="wd-assignment-list" className="list-unstyled assignment-list">
+                {assignments.length > 0 ? (
+                    assignments.map((assignment) => (
+                        <li key={assignment._id} className="wd-assignment-list-item d-flex align-items-start">
+                            <div className="wd-icon">
+                                <MdOutlineAssignment style={{ fontSize: '1.5rem', color: 'green' }} />
+                            </div>
+                            <div className="flex-grow-1">
+                                <Link
+                                    className="wd-assignment-link"
+                                    to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                                    style={{ fontWeight: 'bold', color: 'black' }}
+                                >
+                                    {assignment.title}
+                                </Link>
+                                <div>
+                                    <strong>Due</strong> Date Placeholder | 100 pts
+                                </div>
+                            </div>
+                            <div className="wd-status-icon">
+                                <FaCheckCircle style={{ color: 'green' }} />
+                            </div>
+                        </li>
+                    ))
+                ) : (
+                    <li>No assignments available for this course.</li>
+                )}
             </ul>
+
         </div>
     );
 }
