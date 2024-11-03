@@ -1,67 +1,87 @@
+import { FaSearch, FaPlus, FaCheckCircle } from "react-icons/fa";
+import { MdOutlineAssignment } from "react-icons/md";
+import { useParams, Link } from "react-router-dom";
+import assignmentsData from "../../Database/assignments.json"; // Adjust the import path as necessary
+
 export default function Assignments() {
+    const { cid } = useParams(); // Get the course ID from the URL
+
+    // Filter assignments based on the course ID
+    const assignments = assignmentsData.filter((assignment: any) => assignment.course === cid);
+
     return (
-      <div id="wd-assignments">
-        {/* Search and Buttons Section */}
-        <input 
-          id="wd-search-assignment"
-          placeholder="Search for Assignments"
-          style={{ marginRight: '10px' }}
-        />
-        <button id="wd-add-assignment-group" style={{ marginRight: '5px' }}>
-          + Group
-        </button>
-        <button id="wd-add-assignment">
-          + Assignment
-        </button>
-        
-        {/* Assignments Title */}
-        <h3 id="wd-assignments-title">
-          ASSIGNMENTS 40% of Total
-          <button style={{ marginLeft: '10px' }}>+</button>
-        </h3>
-        
-        {/* Assignments List */}
-        <ul id="wd-assignment-list">
-          {/* Assignment 1 */}
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link"
-              href="#/Kanbas/Courses/1234/Assignments/123"
-              style={{ fontWeight: 'bold', color: 'blue' }}>
-              A1 - ENV + HTML
-            </a>
-            <div style={{ marginTop: '5px' }}>
-              Multiple Modules | <strong>Not available until</strong> May 6 at 12:00am | <br/>
-              <strong>Due</strong> May 13 at 11:59pm | 100 pts
+        <div id="wd-assignments" className="p-3">
+            {/* Search and Buttons Section */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <div className="input-group" style={{ width: '50%' }}>
+                    <span className="input-group-text">
+                        <FaSearch />
+                    </span>
+                    <input
+                        id="wd-search-assignment"
+                        className="form-control"
+                        placeholder="Search for Assignments"
+                    />
+                </div>
+                <div>
+                    <button
+                        id="wd-add-assignment-group"
+                        className="btn btn-light me-2"
+                        style={{ color: 'black' }}
+                    >
+                        + Group
+                    </button>
+                    <button
+                        id="wd-add-assignment"
+                        className="btn btn-danger"
+                    >
+                        + Assignment
+                    </button>
+                </div>
             </div>
-          </li>
-  
-          {/* Assignment 2 */}
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link"
-              href="#/Kanbas/Courses/1234/Assignments/124"
-              style={{ fontWeight: 'bold', color: 'blue' }}>
-              A2 - CSS + BOOTSTRAP
-            </a>
-            <div style={{ marginTop: '5px' }}>
-              Multiple Modules | <strong>Not available until</strong> May 13 at 12:00am | <br/>
-              <strong>Due</strong> May 20 at 11:59pm | 100 pts
-            </div>
-          </li>
-  
-          {/* Assignment 3 */}
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link"
-              href="#/Kanbas/Courses/1234/Assignments/125"
-              style={{ fontWeight: 'bold', color: 'blue' }}>
-              A3 - JAVASCRIPT + REACT
-            </a>
-            <div style={{ marginTop: '5px' }}>
-              Multiple Modules | <strong>Not available until</strong> May 20 at 12:00am | <br/>
-              <strong>Due</strong> May 27 at 11:59pm | 100 pts
-            </div>
-          </li>
-        </ul>
-      </div>
+            <h3
+                id="wd-assignments-title"
+                className="d-flex justify-content-between align-items-center bg-secondary text-white p-3 rounded"
+                style={{ backgroundColor: 'grey', borderRadius: '8px' }}
+            >
+                <span className="fw-bold" style={{ fontSize: '1.5rem', color: "black" }}>ASSIGNMENTS</span>
+                <div className="d-flex align-items-center">
+                    <span className="small me-3" style={{ fontSize: '0.9rem', color: 'black' }}>40% of Total</span>
+                    <button className="btn btn-outline-secondary" style={{ color: 'black' }}>
+                        <FaPlus />
+                    </button>
+                </div>
+            </h3>
+
+            <ul id="wd-assignment-list" className="list-unstyled assignment-list">
+                {assignments.length > 0 ? (
+                    assignments.map((assignment) => (
+                        <li key={assignment._id} className="wd-assignment-list-item d-flex align-items-start">
+                            <div className="wd-icon">
+                                <MdOutlineAssignment style={{ fontSize: '1.5rem', color: 'green' }} />
+                            </div>
+                            <div className="flex-grow-1">
+                                <Link
+                                    className="wd-assignment-link"
+                                    to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                                    style={{ fontWeight: 'bold', color: 'black' }}
+                                >
+                                    {assignment.title}
+                                </Link>
+                                <div>
+                                    <strong>Due</strong> Date Placeholder | 100 pts
+                                </div>
+                            </div>
+                            <div className="wd-status-icon">
+                                <FaCheckCircle style={{ color: 'green' }} />
+                            </div>
+                        </li>
+                    ))
+                ) : (
+                    <li>No assignments available for this course.</li>
+                )}
+            </ul>
+
+        </div>
     );
-  }
-  
+}
