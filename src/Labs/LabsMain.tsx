@@ -25,6 +25,14 @@ export default function LabsMainCards() {
                     <a href="#/Labs/Lab3" className="btn btn-primary">Click here</a>
                 </div>
             </div>
+            <div className="card" style={{ width: "18rem" }}>
+                <img src="images/lab4.jpg" className="card-img-top" alt="Lab 4"/>
+                <div className="card-body">
+                    <h5 className="card-title">Lab 4</h5>
+                    <p className="card-text"></p>
+                    <a href="#/Labs/Lab4" className="btn btn-primary">Click here</a>
+                </div>
+            </div>
         </div>
     );
 }

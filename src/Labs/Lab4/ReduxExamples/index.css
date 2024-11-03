@@ -1,0 +1,54 @@
+/* Styles for TodoForm input and buttons */
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-input {
+    flex-grow: 1; /* Makes the input field take up all available space */
+    margin-right: 10px;
+}
+
+.button-group {
+    display: flex;
+    gap: 5px;
+}
+
+/* Styling for individual buttons */
+#wd-add-todo-click {
+    background-color: green;
+    color: white;
+    border-radius: 8px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#wd-update-todo-click {
+    background-color: #FFDB58;
+    color: black;
+    border-radius: 8px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#wd-set-todo-click {
+    background-color: blue;
+    color: white;
+    border-radius: 8px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#wd-delete-todo-click {
+    background-color: red;
+    color: white;
+    border-radius: 8px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}

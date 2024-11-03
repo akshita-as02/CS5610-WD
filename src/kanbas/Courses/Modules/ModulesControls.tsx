@@ -1,16 +1,15 @@
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckMark";
-import { AiOutlineMinus } from "react-icons/ai"; 
-
-export default function ModulesControls() {
+import { AiOutlineMinus } from "react-icons/ai";
+import ModuleEditor from "./ModuleEditor";
+export default function ModulesControls(
+  { moduleName, setModuleName, addModule }:
+    { moduleName: string; setModuleName: (title: string) => void; addModule: () => void; }) {
   return (
     <div id="wd-modules-controls" className="text-nowrap">
-      <button
-        id="wd-add-module-btn"
-        className="btn btn-sm btn-danger me-1 float-end"
-        style={{ height: "38px" }}
-      >
-        <FaPlus className="position-relative me-2" style={{ fontSize: "1.2rem", verticalAlign: "middle" }} />
+      <button className="btn btn-lg btn-danger me-1 float-end" id="wd-add-module-btn"
+        data-bs-toggle="modal" data-bs-target="#wd-add-module-dialog" >
+        <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Module
       </button>
 
@@ -31,49 +30,49 @@ export default function ModulesControls() {
           <li>
             <a
               id="wd-publish-all-modules-and-items-btn"
-              className="dropdown-item d-flex align-items-center" 
+              className="dropdown-item d-flex align-items-center"
               href="#"
             >
               <span style={{ fontSize: "1rem", verticalAlign: "middle", marginRight: '0.5rem' }}>
                 <GreenCheckmark />
               </span>
-              Publish all modules and items
+              Publish All Modules and Items
             </a>
           </li>
           <li>
             <a
               id="wd-publish-modules-only-button"
-              className="dropdown-item d-flex align-items-center" 
+              className="dropdown-item d-flex align-items-center"
               href="#"
             >
               <span style={{ fontSize: "1rem", verticalAlign: "middle", marginRight: '0.5rem' }}>
                 <GreenCheckmark />
               </span>
-              Publish modules only
+              Publish Modules Only
             </a>
           </li>
           <li>
             <a
               id="wd-unpublish-all-modules-and-items"
-              className="dropdown-item d-flex align-items-center" 
+              className="dropdown-item d-flex align-items-center"
               href="#"
             >
               <span style={{ fontSize: "1rem", verticalAlign: "middle", marginRight: '0.5rem' }}>
                 <AiOutlineMinus style={{ color: 'grey' }} /> {/* Negative icon */}
               </span>
-              Unpublish all modules and items
+              Unpublish All Modules and Items
             </a>
           </li>
           <li>
             <a
               id="wd-unpublish-modules-only"
-              className="dropdown-item d-flex align-items-center" 
+              className="dropdown-item d-flex align-items-center"
               href="#"
             >
               <span style={{ fontSize: "1rem", verticalAlign: "middle", marginRight: '0.5rem' }}>
                 <AiOutlineMinus style={{ color: 'grey' }} /> {/* Negative icon */}
               </span>
-              Unpublish modules only
+              Unpublish Modules Only
             </a>
           </li>
         </ul>
@@ -83,7 +82,7 @@ export default function ModulesControls() {
         id="wd-view-progress"
         className="btn btn-sm btn-secondary me-1 float-end"
       >
-        <span style={{ fontSize: "1.2rem", verticalAlign: "middle" }}></span> 
+        <span style={{ fontSize: "1.2rem", verticalAlign: "middle" }}></span>
         View Progress
       </button>
 
@@ -91,9 +90,14 @@ export default function ModulesControls() {
         id="wd-collapse-all"
         className="btn btn-sm btn-secondary me-1 float-end"
       >
-        <span style={{ fontSize: "1.2rem", verticalAlign: "middle" }}></span> {/* Optional icon */}
+        <span style={{ fontSize: "1.2rem", verticalAlign: "middle" }}></span>
         Collapse All
       </button>
+      <ModuleEditor dialogTitle="Add Module" moduleName={moduleName}
+        setModuleName={setModuleName} addModule={addModule} />
+      <ModuleEditor dialogTitle="Add Module" moduleName={moduleName}
+        setModuleName={setModuleName} addModule={addModule} />
+
     </div>
   );
 }
