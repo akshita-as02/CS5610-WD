@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { assignments } from "../../Database";
 
 interface Assignment {
   _id: string;
@@ -16,8 +15,9 @@ interface AssignmentsState {
   assignments: Assignment[];
 }
 
+// Initial state
 const initialState: AssignmentsState = {
-  assignments: assignments,
+  assignments: [], // Initialize with an empty array
 };
 
 const assignmentsSlice = createSlice({
@@ -25,18 +25,23 @@ const assignmentsSlice = createSlice({
   initialState,
   reducers: {
     addAssignment: (state, action: PayloadAction<Assignment>) => {
-      state.assignments.push(action.payload);
+      state.assignments.push(action.payload); // Add new assignment
     },
     updateAssignment: (state, action: PayloadAction<Assignment>) => {
       state.assignments = state.assignments.map((assignment) =>
-        assignment._id === action.payload._id ? action.payload : assignment
+        assignment._id === action.payload._id ? action.payload : assignment // Update the matching assignment
       );
     },
     deleteAssignment: (state, action: PayloadAction<string>) => {
-      state.assignments = state.assignments.filter((assignment) => assignment._id !== action.payload);
+      state.assignments = state.assignments.filter(
+        (assignment) => assignment._id !== action.payload // Remove the matching assignment
+      );
     },
   },
 });
 
+// Export actions
 export const { addAssignment, updateAssignment, deleteAssignment } = assignmentsSlice.actions;
+
+// Export reducer
 export default assignmentsSlice.reducer;
