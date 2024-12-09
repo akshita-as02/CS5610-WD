@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import * as assignmentClient from "./client";
 import * as coursesClient from "../client";
 interface Assignment {
-  _id: string;
+  _id: any;
   title: string;
   description: string;
   points: number;
@@ -18,7 +18,7 @@ export default function AssignmentEditor() {
   const navigate = useNavigate();
 
   const [updatedAssignment, setUpdatedAssignment] = useState<Assignment>({
-    _id: "",
+    _id:  "",
     title: "",
     description: "",
     points: 0,
@@ -32,13 +32,14 @@ export default function AssignmentEditor() {
 
   useEffect(() => {
     if (isEditMode) {
-      assignmentClient.getAssignmentById(aid!).then((assignment) => {
-        setUpdatedAssignment(assignment);
-      }).catch((err) => {
-        console.error("Error fetching assignment:", err);
-      });
-    }
+      // Fetch the assignment only if in edit mode
+      assignmentClient
+        .getAssignmentById(aid!)
+        .then((assignment) => setUpdatedAssignment(assignment))
+        .catch((err) => console.error("Error fetching assignment:", err));
+    } 
   }, [aid, isEditMode]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -47,19 +48,15 @@ export default function AssignmentEditor() {
 
   const handleSave = () => {
     if (isEditMode) {
-      // Update the existing assignment
-      assignmentClient.updateAssignment(updatedAssignment).then(() => {
-        navigate(`/Kanbas/Courses/${cid}/Assignments`);
-      }).catch((err) => {
-        console.error("Error updating assignment:", err);
-      });
+      assignmentClient
+        .updateAssignment(updatedAssignment)
+        .then(() => navigate(`/Kanbas/Courses/${cid}/Assignments`))
+        .catch((err) => console.error("Error updating assignment:", err));
     } else {
-      // Create a new assignment
-      assignmentClient.createAssignment(updatedAssignment).then(() => {
-        navigate(`/Kanbas/Courses/${cid}/Assignments`);
-      }).catch((err) => {
-        console.error("Error creating assignment:", err);
-      });
+      assignmentClient
+        .createAssignment(updatedAssignment)
+        .then(() => navigate(`/Kanbas/Courses/${cid}/Assignments`))
+        .catch((err) => console.error("Error creating assignment:", err));
     }
   };
 
@@ -111,6 +108,7 @@ export default function AssignmentEditor() {
               <td>
                 <select id="group" onChange={handleChange} style={{ marginBottom: '5px' }}>
                   <option>ASSIGNMENTS</option>
+                  <option>QUIZZES</option>
                 </select>
               </td>
             </tr>
@@ -186,3 +184,4 @@ export default function AssignmentEditor() {
     </div>
   );
 }
+

@@ -11,8 +11,10 @@ import * as modulesClient from "./client";
 
 export default function Modules() {
     const { cid } = useParams();
+    console.log(cid);
     const [moduleName, setModuleName] = useState("");
     const { modules } = useSelector((state: any) => state.modulesReducer);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
 
     const createModuleForCourse = async () => {
@@ -24,6 +26,7 @@ export default function Modules() {
 
     const fetchModules = async () => {
         const modules = await coursesClient.findModulesForCourse(cid as string);
+        console.log("MODULES", modules);
         dispatch(setModules(modules));
     };
 
@@ -39,7 +42,7 @@ export default function Modules() {
 
     useEffect(() => {
         fetchModules();
-    }, []);
+    }, [cid]);
 
     const [collapsed, setCollapsed] = useState(false);
     const [selectedAction, setSelectedAction] = useState("");
@@ -57,9 +60,10 @@ export default function Modules() {
 
     return (
         <div className="wd-modules">
-            <ModulesControls moduleName={moduleName} setModuleName={setModuleName}
-                addModule={createModuleForCourse} />
-
+            {currentUser.role !== "STUDENT" && (
+                <ModulesControls moduleName={moduleName} setModuleName={setModuleName}
+                    addModule={createModuleForCourse} />
+            )}
             <br /><br /><br />
             <ul id="wd-modules" className="list-group rounded-0">
                 {modules.map((module: any) => (
@@ -68,10 +72,10 @@ export default function Modules() {
                             {/* Module Heading */}
                             <div className="wd-title p-3 ps-2 bg-secondary w-100">
                                 <BsGripVertical className="me-2 fs-3" />
-                                
+
                                 {/* Module Name Editing */}
                                 {!module.editing && module.name}
-                                {module.editing && (
+                                {module.editing && currentUser.role !== "STUDENT" && (
                                     <input
                                         className="form-control w-50 d-inline-block"
                                         value={module.name}
@@ -83,10 +87,11 @@ export default function Modules() {
                                         }}
                                     />
                                 )}
-
-                                <ModuleControlButtons moduleId={module._id}
-                                    deleteModule={(moduleId) => removeModule(moduleId)}
-                                    editModule={(moduleId) => dispatch(editModule(moduleId))} />
+                                {currentUser.role !== "STUDENT" && (
+                                    <ModuleControlButtons moduleId={module._id}
+                                        deleteModule={(moduleId) => removeModule(moduleId)}
+                                        editModule={(moduleId) => dispatch(editModule(moduleId))} />
+                                )}
                             </div>
                         </li>
 

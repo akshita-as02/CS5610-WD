@@ -3,44 +3,38 @@ import { useSelector } from "react-redux";
 
 export default function AccountNavigation() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-
+  const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
+  
   return (
-    <div 
-      id="wd-account-navigation" 
+    <div
+      id="wd-account-navigation"
       className="wd list-group rounded-0"
-      style={{ border: 'white', outline: 'none' }}
+      style={{ border: "white", outline: "none" }}
     >
-      {/* Conditionally render Signin and Signup links */}
-      {!currentUser && (
-        <>
-          <NavLink 
-            to="/Kanbas/Account/Signin" 
-            id="wd-account-signin-link" 
-            className={({ isActive }) => `list-group-item ${isActive ? 'text-black' : 'text-danger'} wd-navigation-link ${isActive ? 'active' : ''}`}
-            style={{ border: 'none', outline: 'none' }}
-          >
-            Signin
-          </NavLink>
-          <NavLink 
-            to="/Kanbas/Account/Signup" 
-            id="wd-account-signup-link" 
-            className={({ isActive }) => `list-group-item ${isActive ? 'text-black' : 'text-danger'} wd-navigation-link ${isActive ? 'active' : ''}`}
-            style={{ border: 'none', outline: 'none' }}
-          >
-            Signup
-          </NavLink>
-        </>
-      )}
-
-      {/* Conditionally render Profile link */}
-      {currentUser && (
-        <NavLink 
-          to="/Kanbas/Account/Profile" 
-          id="wd-account-profile-link" 
-          className={({ isActive }) => `list-group-item ${isActive ? 'text-black' : 'text-danger'} wd-navigation-link ${isActive ? 'active' : ''}`}
-          style={{ border: 'none', outline: 'none' }}
+      {links.map((link) => (
+        <NavLink
+          key={link}
+          to={`/Kanbas/Account/${link}`}
+          id={`wd-account-${link.toLowerCase()}-link`}
+          className={({ isActive }) =>
+            `list-group-item ${isActive ? "text-black" : "text-danger"} wd-navigation-link ${isActive ? "active" : ""}`
+          }
+          style={{ border: "none", outline: "none" }}
         >
-          Profile
+          {link}
+        </NavLink>
+      ))}
+
+      {currentUser && currentUser.role === "ADMIN" && (
+        <NavLink
+          to="/Kanbas/Account/Users"
+          id="wd-account-users-link"
+          className={({ isActive }) =>
+            `list-group-item ${isActive ? "text-black" : "text-danger"} wd-navigation-link ${isActive ? "active" : ""}`
+          }
+          style={{ border: "none", outline: "none" }}
+        >
+          Users
         </NavLink>
       )}
     </div>

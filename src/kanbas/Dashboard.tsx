@@ -13,6 +13,9 @@ export default function Dashboard({
   addNewCourse,
   deleteCourse,
   updateCourse,
+  enrolling,
+  setEnrolling,
+  updateEnrollment
 }: {
   courses: any[];
   course: any;
@@ -20,22 +23,25 @@ export default function Dashboard({
   addNewCourse: () => void;
   deleteCourse: (courseId: string) => void;
   updateCourse: () => void;
+  enrolling: boolean;
+  setEnrolling: (enrolling: boolean) => void;
+  updateEnrollment: (courseId: string, enrolled: boolean) => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const [showAllCourses, setShowAllCourses] = useState(false); // State to toggle
   const [enrollments, setEnrollments] = useState<any[]>([]); // State for enrollments
 
-  const updateEnrollments = async () => {
-    try {
-      // Fetch the user's enrollments from the backend
-      const userEnrollments = await getCoursesForCurrentUser();
-      setEnrollments(userEnrollments); // Update the state with the fetched data
-    } catch (error) {
-      console.error("Error updating enrollments:", error);
-      alert("Failed to update enrollments. Please try again.");
-    }
-  };
+  // const updateEnrollments = async () => {
+  //   try {
+  //     // Fetch the user's enrollments from the backend
+  //     const userEnrollments = await getCoursesForCurrentUser();
+  //     setEnrollments(userEnrollments); // Update the state with the fetched data
+  //   } catch (error) {
+  //     console.error("Error updating enrollments:", error);
+  //     alert("Failed to update enrollments. Please try again.");
+  //   }
+  // };
 
   const fetchEnrolledCourses = async () => {
     try {
@@ -52,86 +58,101 @@ export default function Dashboard({
     }
   }, [currentUser]);
 
-  // Toggle between all courses and enrolled courses
-  const toggleCourses = () => {
-    setShowAllCourses((prev) => !prev);
-  };
+  // Toggle between all courses and enrolled courses:OLD
+  // const toggleCourses = () => {
+  //   setShowAllCourses((prev) => !prev);
+  // };
+  const setEnrollment = async (course: any) => {
+    const updatedEnrolledStatus = !course.enrolled;
+    updateEnrollment(course._id, !course.enrolled);
+    course.enrolled = updatedEnrolledStatus; // Locally toggle the enrolled status
+    setEnrollments(prevEnrollments => {
+      // Update the state to reflect the change
+      if (updatedEnrolledStatus) {
+        return [...prevEnrollments, course];
+      } else {
+        return prevEnrollments.filter(c => c._id !== course._id);
+      }
+    });
+
+    fetchEnrolledCourses();
+  }
 
   const displayedCourses =
     currentUser.role === "STUDENT"
-      ? showAllCourses
+      ? enrolling
         ? courses // Show all courses if toggle is ON
         : enrolledCourses // Show only enrolled courses if toggle is OFF
       : courses;
 
-      const handleEnroll = async (userId: string, courseId: string) => {
-        try {
-          // Optimistic UI: Immediately update the enrolled courses state
-          setEnrolledCourses((prevCourses) => [
-            ...prevCourses,
-            { _id: courseId, user: userId },
-          ]);
-      
-          // Call the backend API to enroll the user
-          const response = await enrollInCourse(userId, courseId);
-          if (response.status === 409) {
-            alert(response.data.message); // Handle conflict message
-            // If enrollment fails, revert the optimistic UI update
-            setEnrolledCourses((prevCourses) =>
-              prevCourses.filter((course) => course._id !== courseId)
-            );
-          }
-        } catch (error) {
-          console.error('Failed to enroll in course:', error);
-          alert('Failed to enroll in the course. Please try again.');
-          // If the API call fails, revert the optimistic UI update
-          setEnrolledCourses((prevCourses) =>
-            prevCourses.filter((course) => course._id !== courseId)
-          );
-        }
-      };
-      
-      const handleUnenroll = async (userId: string, courseId: string) => {
-        try {
-          // Optimistic UI: Immediately update the enrolled courses state
-          setEnrolledCourses((prevCourses) =>
-            prevCourses.filter((course) => course._id !== courseId)
-          );
-      
-          // Call the backend API to unenroll the user
-          await unenrollFromCourse(userId, courseId);
-        } catch (error) {
-          console.error('Failed to unenroll from course:', error);
-          alert('Failed to unenroll from the course. Please try again.');
-          // If the API call fails, revert the optimistic UI update
-          setEnrolledCourses((prevCourses) => [
-            ...prevCourses,
-            { _id: courseId, user: userId },
-          ]);
-        }
-      };
-      
+  const handleEnroll = async (userId: string, courseId: string) => {
+    try {
+      // Optimistic UI: Immediately update the enrolled courses state
+      setEnrolledCourses((prevCourses) => [
+        ...prevCourses,
+        { _id: courseId, user: userId },
+      ]);
 
-  useEffect(() => {
-    if (currentUser.role === "STUDENT") {
-      updateEnrollments(); // Populate enrollments when the component mounts
+      // Call the backend API to enroll the user
+      const response = await enrollInCourse(userId, courseId);
+      if (response.status === 409) {
+        alert(response.data.message); // Handle conflict message
+        // If enrollment fails, revert the optimistic UI update
+        setEnrolledCourses((prevCourses) =>
+          prevCourses.filter((course) => course._id !== courseId)
+        );
+      }
+    } catch (error) {
+      console.error('Failed to enroll in course:', error);
+      alert('Failed to enroll in the course. Please try again.');
+      // If the API call fails, revert the optimistic UI update
+      setEnrolledCourses((prevCourses) =>
+        prevCourses.filter((course) => course._id !== courseId)
+      );
     }
-  }, []);
+  };
+
+  const handleUnenroll = async (userId: string, courseId: string) => {
+    try {
+      // Optimistic UI: Immediately update the enrolled courses state
+      setEnrolledCourses((prevCourses) =>
+        prevCourses.filter((course) => course._id !== courseId)
+      );
+
+      // Call the backend API to unenroll the user
+      await unenrollFromCourse(userId, courseId);
+    } catch (error) {
+      console.error('Failed to unenroll from course:', error);
+      alert('Failed to unenroll from the course. Please try again.');
+      // If the API call fails, revert the optimistic UI update
+      setEnrolledCourses((prevCourses) => [
+        ...prevCourses,
+        { _id: courseId, user: userId },
+      ]);
+    }
+  };
+
+
+  // useEffect(() => {
+  //   if (currentUser.role === "STUDENT") {
+  //     updateEnrollments(); // Populate enrollments when the component mounts
+  //   }
+  // }, []);
 
   return (
     <div id="wd-dashboard" className="container">
-      <h1 id="wd-dashboard-title" className="mt-4">Dashboard</h1>
+      <h1 id="wd-dashboard-title" className="mt-4">Dashboard
+      </h1>
       <hr />
 
       {currentUser.role === "STUDENT" && (
         <div className="d-flex">
-          {/* <h5>Courses</h5> */}
-          <button className="btn btn-secondary ms-auto" onClick={toggleCourses}>
-            {showAllCourses ? "Show Enrolled Courses" : "Show All Courses"}
+          <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary ms-auto" >
+            {enrolling ? "My Courses" : "All Courses"}
           </button>
+
         </div>
       )}
-
       {currentUser.role !== "STUDENT" && (
         <>
           <h5>New Course</h5>
@@ -167,11 +188,10 @@ export default function Dashboard({
 
       <h2 id="wd-dashboard-published" className="mt-4">
         {currentUser.role === "STUDENT"
-          ? showAllCourses
-            ? "All Courses"
-            : "Enrolled Courses"
+          ? (enrolling ? "All Courses" : "My Courses")
           : "Published Courses"}{" "}
         ({displayedCourses.length})
+
       </h2>
       <hr />
 
@@ -206,11 +226,20 @@ export default function Dashboard({
                 </p>
                 <div className="mt-auto d-flex justify-content-between">
                   <Link
-                    to={`/Kanbas/Courses/${course._id}/Modules`}
-                    className="btn btn-primary"
+                    to={currentUser.role === "STUDENT" && !enrolledCourses.some((c) => c._id === course._id)
+                      ? "#" // Prevent navigation if not enrolled
+                      : `/kanbas/Courses/${course._id}/modules`}
+                    className={`btn btn-primary ${currentUser.role === "STUDENT" && !enrolledCourses.some((c) => c._id === course._id) ? "disabled" : ""}`}
+                    onClick={(e) => {
+                      if (currentUser.role === "STUDENT" && !enrolledCourses.some((c) => c._id === course._id)) {
+                        e.preventDefault(); // Prevent default navigation behavior
+                        alert("You need to enroll in this course to access it."); // Show an alert
+                      }
+                    }}
                   >
                     Go
                   </Link>
+
                   {currentUser.role === "STUDENT" ? (
                     enrolledCourses.some((c) => c._id === course._id) ? (
                       <button
@@ -253,6 +282,7 @@ export default function Dashboard({
           </div>
         ))}
       </div>
+
     </div>
   );
 }

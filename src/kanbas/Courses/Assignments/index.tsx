@@ -6,11 +6,12 @@ import { useState, useEffect } from "react";
 import * as assignmentClient from "./client"; // Import your client
 import ConfirmationDialog from "./ConfirmationDialogProps";
 import * as coursesClient from "../client";
+import { useSelector } from "react-redux";
 
 export default function Assignments() {
     const { cid } = useParams();
     const navigate = useNavigate();
-
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const [assignments, setAssignments] = useState<any[]>([]); // State to store assignments
     const [dialogOpen, setDialogOpen] = useState(false);
     const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(null);
@@ -54,7 +55,7 @@ export default function Assignments() {
         setAssignmentToDelete(null);
         setDialogOpen(false);
     };
-
+console.log("current user:", currentUser.role);
     return (
         <div id="wd-assignments" className="p-3">
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -68,22 +69,24 @@ export default function Assignments() {
                         placeholder="Search for Assignments"
                     />
                 </div>
-                <div>
-                    <button
-                        id="wd-add-assignment-group"
-                        className="btn btn-light me-2"
-                        style={{ color: 'black' }}
-                    >
-                        + Group
-                    </button>
-                    <button
-                        id="wd-add-assignment"
-                        className="btn btn-danger"
-                        onClick={() => navigate(`/Kanbas/Courses/${cid}/Assignments/Editor`)}
-                    >
-                        + Assignment
-                    </button>
-                </div>
+                {currentUser.role !== "STUDENT" && ( // Show add assignment options only for non-students
+                    <div>
+                        <button
+                            id="wd-add-assignment-group"
+                            className="btn btn-light me-2"
+                            style={{ color: 'black' }}
+                        >
+                            + Group
+                        </button>
+                        <button
+                            id="wd-add-assignment"
+                            className="btn btn-danger"
+                            onClick={() => navigate(`/Kanbas/Courses/${cid}/Assignments/Editor`)}
+                        >
+                            + Assignment
+                        </button>
+                    </div>
+                )}
             </div>
             <h3
                 id="wd-assignments-title"
@@ -119,13 +122,19 @@ export default function Assignments() {
                                         <strong>Due</strong> {assignment.dueDate || "Date Placeholder"} | {assignment.points} pts
                                     </div>
                                 </div>
-                                <div className="wd-status-icon d-flex align-items-center">
-                                    <FaCheckCircle style={{ color: 'green' }} />
-                                    <AiFillDelete
-                                        style={{ cursor: "pointer", color: 'red', marginLeft: '10px' }}
-                                        onClick={() => handleDeleteClick(assignment._id)}
-                                    />
-                                </div>
+                                
+                                    <div className="wd-status-icon d-flex align-items-center">
+                                        <FaCheckCircle style={{ color: 'green' }} />
+                                        {currentUser.role !== "STUDENT" && (
+                                            <div>
+                                        <AiFillDelete
+                                            style={{ cursor: "pointer", color: 'red', marginLeft: '10px' }}
+                                            onClick={() => handleDeleteClick(assignment._id)}
+                                        />
+                                        </div>
+                                        )}
+                                    </div>
+                                
                             </li>
                         );
                     })
@@ -137,7 +146,7 @@ export default function Assignments() {
                 <ConfirmationDialog
                     onConfirm={handleConfirmDelete}
                     onCancel={handleCancelDelete}
-                    message={`Are you sure you want to delete this assignment?`} 
+                    message={`Are you sure you want to delete this assignment?`}
                 />
             )}
         </div>
